@@ -15,6 +15,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/adm")
 public class AdmController {
 
+    @GetMapping("/add")
+    public String showAddPage() {
+        return "adm/add";  // This refers to src/main/resources/templates/adm/add.html
+    }
+
     @Autowired
     private ProdutoRepository repository;
 
