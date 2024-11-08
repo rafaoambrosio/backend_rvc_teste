@@ -43,8 +43,8 @@ public class ProdutoFaixaPreco {
         this.preco = preco;
     }
 
-    public Produto getProduto() {
-        return produto;
+    public Long getProduto() {
+        return produto.getId();
     }
 
     public void setProduto(Produto produto) {
