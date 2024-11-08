@@ -83,15 +83,19 @@ public ResponseEntity<ProdutoResponseDTO> createProduto(@RequestBody ProdutoRequ
             produto.setItensInclusos(data.itensInclusos());
             produto.setDicas(data.dicas());
             produto.setObservacoes(data.observacoes());
-            List<ProdutoFaixaPreco> faixaPrecoList = data.faixaPreco().stream().map(item -> {
+            
+            // Clear the existing faixaPreco list to avoid orphan issues
+            produto.getFaixaPreco().clear();
+
+            // Add each new faixaPreco item, setting the association with produto
+            data.faixaPreco().forEach(item -> {
                 ProdutoFaixaPreco faixaPreco = new ProdutoFaixaPreco();
                 faixaPreco.setFaixa(item.get(0));
                 faixaPreco.setPreco(item.get(1));
-                faixaPreco.setProduto(produto); // Set the association
-                return faixaPreco;
-            }).collect(Collectors.toList());
-        
-            produto.setFaixaPreco(faixaPrecoList);
+                faixaPreco.setProduto(produto);
+                produto.getFaixaPreco().add(faixaPreco);
+            });
+
             produto.setUrlVideo(data.urlVideo());
             produto.setNumeroDiarias(data.numeroDiarias());
             produto.setHospedagemInclusa(data.hospedagemInclusa());
@@ -104,6 +108,7 @@ public ResponseEntity<ProdutoResponseDTO> createProduto(@RequestBody ProdutoRequ
             throw new EntityNotFoundException("Produto não encontrado com id: " + id);
         }
     }
+
 
     // Endpoint para deletar um produto
     @DeleteMapping("/{id}")
